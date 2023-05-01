@@ -9,7 +9,7 @@ public class Game {
 
     //N is the boards size
     public void placesNAmountOfQueensOnBoardWithBacktrackingAlgorithm (Board board){
-        if (board.getSize()<3){
+        if (board.getSize()<=3){
             throw new IllegalArgumentException("board is to small. It is required that: size<3");
         }
 
