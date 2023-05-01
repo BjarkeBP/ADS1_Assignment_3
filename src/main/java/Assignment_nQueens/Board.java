@@ -16,11 +16,18 @@ public class Board {
         history = new ArrayList<>();
 
         history.add(copyBoard());
-        pointer = 1;
+        pointer = 0;
     }
 
     private String[][] copyBoard(){
-        return board.clone();
+        String[][] newboard = new String[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                String newVal = this.board[i][j];
+                newboard[i][j] = newVal;
+            }
+        }
+        return newboard;
     }
 
 
@@ -39,29 +46,32 @@ public class Board {
         int target2 = x+y;
 
         for (int i = 0; i < size; i++) {
-            if (target1>=0 && target1<=10) {
+            if (target1>=0 && target1<size) {
                 board[target1][i] = "Restricted";
             }
-            if (target2>=0 && target2<=10) {
+
+            if (target2>=0 && target2<size) {
                 board[target2][i] = "Restricted";
             }
             target1++;
-            target2++;
+            target2--;
         }
 
         //add Queen
-        board[x][y] = "Queen";
+        board[x][y] = "  Queen   ";
 
-        //update History and pointer
-        history.add(copyBoard());
+        //add History and update pointer
         pointer++;
+        history.add(copyBoard());
     }
 
     //back to earlier stages
-    private void back(){
+    public void back(){
         if (pointer>0){
+            history.remove(pointer);
             pointer--;
         }
+
         board = history.get(pointer).clone();
     }
 
@@ -71,7 +81,7 @@ public class Board {
 
         for (int i = 0; i < size; i++) {
             String temp = board[pointer][i];
-            if (!temp.equals("Restricted")){
+            if (temp==null){
                 tempList = new ArrayList<>();
                 tempList.add(pointer);
                 tempList.add(i);
@@ -80,4 +90,53 @@ public class Board {
         }
         return columnPositions;
     }
+
+    public String printBoard(){
+        return printBoard(board);
+    }
+
+    public String printHistory(){
+        String toReturn = "\n";
+        for (int i = 0; i < history.size(); i++) {
+            if (history.get(i)!=null){
+                toReturn += "Historical index: " + i + "\n";
+                toReturn += printBoard(history.get(i));
+                toReturn += "\n";
+            }
+        }
+        return toReturn;
+    }
+
+    private String printBoard(String[][] board){
+        String boardRepresentation = "\n";
+        for (int i = size-1; i >= 0; i--) {
+            String line = "line " + i + ": [";
+            for (int j = 0; j < size; j++) {
+                String temp = board[j][i];
+
+                if (temp==null){
+                    line += " [   " + temp + "   ]";
+                } else {
+                    line += " [" + temp + "]";
+                }
+            }
+            line += " ]";
+            boardRepresentation += line;
+            boardRepresentation += "\n";
+        }
+        return boardRepresentation;
+
+    }
+
+
+
+    public int getPointer() {
+        return pointer;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+
 }
