@@ -15,15 +15,15 @@ public class Board {
         board = new String[size][size];
         history = new ArrayList<>();
 
-        history.add(copyBoard());
+        history.add(copyBoard(board));
         pointer = 0;
     }
 
-    private String[][] copyBoard(){
+    private String[][] copyBoard(String[][] board){
         String[][] newboard = new String[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                String newVal = this.board[i][j];
+                String newVal = board[i][j];
                 newboard[i][j] = newVal;
             }
         }
@@ -62,17 +62,16 @@ public class Board {
 
         //add History and update pointer
         pointer++;
-        history.add(copyBoard());
+        history.add(copyBoard(board));
     }
 
     //back to earlier stages
     public void back(){
-        if (pointer>0){
+        if (pointer>=1){
             history.remove(pointer);
             pointer--;
+            board = copyBoard(history.get(pointer));
         }
-
-        board = history.get(pointer).clone();
     }
 
     public ArrayList<ArrayList<Integer>> getRelevantPointerColumnPositions(){
